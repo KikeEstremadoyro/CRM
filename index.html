@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM — Ventas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #16161d;
+    --surface2: #1e1e28;
+    --border: #2a2a38;
+    --accent: #c8a96e;
+    --accent2: #e8c98e;
+    --text: #e8e8f0;
+    --text2: #9090a8;
+    --green: #4caf82;
+    --blue: #5b9bd5;
+    --orange: #e07b39;
+    --red: #e05555;
+    --purple: #8b6fd4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* Layout */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+  .main { flex: 1; overflow-y: auto; }
+
+  /* Sidebar */
+  .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); }
+  .sidebar-logo h1 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); letter-spacing: -0.5px; }
+  .sidebar-logo span { font-size: 11px; color: var(--text2); font-weight: 300; letter-spacing: 2px; text-transform: uppercase; }
+  .nav { padding: 12px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; color: var(--text2); font-size: 14px; font-weight: 400; transition: all 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(200,169,110,0.06); }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* Header */
+  .page-header { padding: 28px 32px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); }
+  .page-sub { font-size: 13px; color: var(--text2); margin-top: 3px; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; font-family: inherit; }
+  .btn-primary { background: var(--accent); color: #0f0f13; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text2); }
+  .btn-danger { background: rgba(224,85,85,0.15); color: var(--red); border: 1px solid rgba(224,85,85,0.3); }
+  .btn-danger:hover { background: rgba(224,85,85,0.25); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  /* Cards & Grid */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px 32px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; }
+  .card-value { font-size: 28px; font-family: 'DM Serif Display', serif; color: var(--text); margin-top: 6px; }
+  .card-value.accent { color: var(--accent); }
+
+  /* Pipeline */
+  .pipeline { padding: 0 32px 32px; }
+  .pipeline-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .pipeline-cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .pipeline-col { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-height: 200px; }
+  .pipeline-col-title { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+  .etapa-prospecto { background: rgba(91,155,213,0.15); color: var(--blue); }
+  .etapa-calificado { background: rgba(139,111,212,0.15); color: var(--purple); }
+  .etapa-propuesta { background: rgba(224,123,57,0.15); color: var(--orange); }
+  .etapa-negociacion { background: rgba(200,169,110,0.15); color: var(--accent); }
+  .etapa-cerrado { background: rgba(76,175,130,0.15); color: var(--green); }
+
+  .op-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+  .op-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .op-card-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .op-card-client { font-size: 11px; color: var(--text2); margin-bottom: 8px; }
+  .op-card-value { font-size: 13px; font-weight: 600; color: var(--accent); }
+  .op-card-prob { font-size: 11px; color: var(--text2); }
+  .prob-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; }
+  .prob-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.3s; }
+
+  /* Table */
+  .table-wrap { padding: 0 32px 32px; }
+  .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .table-search { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; color: var(--text); font-size: 13px; font-family: inherit; width: 240px; outline: none; }
+  .table-search:focus { border-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  td { padding: 13px 14px; border-bottom: 1px solid rgba(42,42,56,0.5); font-size: 13px; vertical-align: middle; }
+  tr:hover td { background: var(--surface2); }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.5); }
+  .modal-header { padding: 24px 28px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 22px; }
+  .modal-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 20px; padding: 4px; line-height: 1; }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 20px 28px 28px; }
+  .form-group { margin-bottom: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  label { display: block; font-size: 12px; color: var(--text2); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; color: var(--text); font-size: 13px; font-family: inherit; outline: none; transition: border 0.15s; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 80px; }
+  select option { background: var(--surface); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* Detail Panel */
+  .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 0 32px 32px; }
+  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .detail-title { font-family: 'DM Serif Display', serif; font-size: 24px; }
+  .detail-meta { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .detail-field label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+  .detail-field .value { font-size: 15px; color: var(--text); margin-top: 3px; }
+  .activity-list { border-top: 1px solid var(--border); padding-top: 20px; }
+  .activity-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .activity-item { display: flex; gap: 12px; margin-bottom: 14px; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+  .activity-content { flex: 1; }
+  .activity-desc { font-size: 13px; color: var(--text); }
+  .activity-date { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .add-activity { margin-top: 16px; display: flex; gap: 10px; }
+  .add-activity input { flex: 1; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 60px 20px; color: var(--text2); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-text { font-size: 15px; }
+
+  /* Notification */
+  .notification { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+  .notification.show { transform: translateY(0); opacity: 1; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 768px) {
+    .pipeline-cols { grid-template-columns: 1fr 1fr; }
+    .cards-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h1>CRM</h1>
+      <span>Ventas</span>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('pipeline')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Pipeline
+      </div>
+      <div class="nav-item" onclick="showPage('oportunidades')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Oportunidades
+      </div>
+      <div class="nav-item" onclick="showPage('clientes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main" id="main-content">
+    <!-- Dashboard -->
+    <div id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub">Resumen de ventas y oportunidades</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('nueva-op')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva Oportunidad
+        </button>
+      </div>
+      <div class="cards-grid" id="dashboard-cards">
+        <div class="card"><div class="card-label">Oportunidades</div><div class="card-value" id="d-total">—</div></div>
+        <div class="card"><div class="card-label">Valor Total</div><div class="card-value accent" id="d-valor">—</div></div>
+        <div class="card"><div class="card-label">Cerradas</div><div class="card-value" id="d-cerradas">—</div></div>
+        <div class="card"><div class="card-label">En Proceso</div><div class="card-value" id="d-proceso">—</div></div>
+      </div>
+      <div class="pipeline">
+        <div class="pipeline-title">Actividad Reciente</div>
+        <div id="dashboard-recientes"></div>
+      </div>
+    </div>
+
+    <!-- Pipeline -->
+    <div id="page-pipeline" class="hidden">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Pipeline</div>
+          <div class="page-sub">Oportunidades por etapa</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('nueva-op')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva Oportunidad
+        </button>
+      </div>
+      <div style="padding: 24px 32px 32px;">
+        <div class="pipeline-cols" id="pipeline-cols">
+          <div class="pipeline-col"><div class="pipeline-col-title etapa-prospecto">Prospecto</div><div id="col-prospecto"></div></div>
+          <div class="pipeline-col"><div class="pipeline-col-title etapa-calificado">Calificado</div><div id="col-calificado"></div></div>
+          <div class="pipeline-col"><div class="pipeline-col-title etapa-propuesta">Propuesta</div><div id="col-propuesta"></div></div>
+          <div class="pipeline-col"><div class="pipeline-col-title etapa-negociacion">Negociación</div><div id="col-negociacion"></div></div>
+          <div class="pipeline-col"><div class="pipeline-col-title etapa-cerrado">Cerrado</div><div id="col-cerrado"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Oportunidades -->
+    <div id="page-oportunidades" class="hidden">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Oportunidades</div>
+          <div class="page-sub">Lista completa de oportunidades de venta</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('nueva-op')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva Oportunidad
+        </button>
+      </div>
+      <div class="table-wrap" style="margin-top:24px;">
+        <div class="table-header">
+          <input type="text" class="table-search" placeholder="Buscar oportunidad..." oninput="filtrarOps(this.value)">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Cliente</th>
+              <th>Etapa</th>
+              <th>Valor</th>
+              <th>Prob.</th>
+              <th>Cierre</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="ops-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Clientes -->
+    <div id="page-clientes" class="hidden">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Clientes</div>
+          <div class="page-sub">Directorio de clientes y prospectos</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('nuevo-cliente')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Nuevo Cliente
+        </button>
+      </div>
+      <div class="table-wrap" style="margin-top:24px;">
+        <table>
+          <thead>
+            <tr><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th></tr>
+          </thead>
+          <tbody id="clientes-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Detalle Oportunidad -->
+    <div id="page-detalle" class="hidden">
+      <div class="page-header" style="margin-bottom:24px;">
+        <button class="btn btn-ghost btn-sm" onclick="showPage('oportunidades')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Volver
+        </button>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-ghost btn-sm" onclick="editarOp()">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarOp()">Eliminar</button>
+        </div>
+      </div>
+      <div id="detalle-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nueva Oportunidad -->
+<div class="modal-overlay hidden" id="modal-nueva-op">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-op-title">Nueva Oportunidad</div>
+      <button class="modal-close" onclick="closeModal('nueva-op')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="op-edit-id">
+      <div class="form-group">
+        <label>Título de la Oportunidad *</label>
+        <input type="text" id="op-titulo" placeholder="Ej: Implementación ERP - Empresa XYZ">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre del Cliente *</label>
+          <input type="text" id="op-cliente" placeholder="Nombre completo">
+        </div>
+        <div class="form-group">
+          <label>Empresa</label>
+          <input type="text" id="op-empresa" placeholder="Nombre de la empresa">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Valor ($)</label>
+          <input type="number" id="op-valor" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Etapa</label>
+          <select id="op-etapa">
+            <option>Prospecto</option>
+            <option>Calificado</option>
+            <option>Propuesta</option>
+            <option>Negociación</option>
+            <option>Cerrado</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Probabilidad (%)</label>
+          <input type="number" id="op-prob" min="0" max="100" placeholder="50">
+        </div>
+        <div class="form-group">
+          <label>Fecha de Cierre</label>
+          <input type="date" id="op-cierre">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notas</label>
+        <textarea id="op-notas" placeholder="Detalles adicionales..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('nueva-op')">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarOp()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Cliente -->
+<div class="modal-overlay hidden" id="modal-nuevo-cliente">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nuevo Cliente</div>
+      <button class="modal-close" onclick="closeModal('nuevo-cliente')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre *</label>
+          <input type="text" id="c-nombre" placeholder="Nombre completo">
+        </div>
+        <div class="form-group">
+          <label>Empresa</label>
+          <input type="text" id="c-empresa" placeholder="Nombre de empresa">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="c-email" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="c-telefono" placeholder="+1 234 567 8900">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('nuevo-cliente')">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarCliente()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notification" id="notification"></div>
+
+<script>
+const API = '';
+let allOps = [];
+let currentOpId = null;
+
+// Navigation
+function showPage(page) {
+  document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('page-' + page).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navMap = { dashboard: 0, pipeline: 1, oportunidades: 2, clientes: 3 };
+  const items = document.querySelectorAll('.nav-item');
+  if (navMap[page] !== undefined) items[navMap[page]].classList.add('active');
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'pipeline') loadPipeline();
+  if (page === 'oportunidades') loadOps();
+  if (page === 'clientes') loadClientes();
+}
+
+// Modal
+function openModal(name) {
+  if (name === 'nueva-op') {
+    document.getElementById('modal-op-title').textContent = 'Nueva Oportunidad';
+    document.getElementById('op-edit-id').value = '';
+    ['op-titulo','op-cliente','op-empresa','op-notas','op-cierre'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('op-valor').value = '';
+    document.getElementById('op-prob').value = '';
+    document.getElementById('op-etapa').value = 'Prospecto';
+  }
+  document.getElementById('modal-' + name).classList.remove('hidden');
+}
+function closeModal(name) {
+  document.getElementById('modal-' + name).classList.add('hidden');
+}
+
+// Notify
+function notify(msg) {
+  const n = document.getElementById('notification');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2500);
+}
+
+// Format
+function formatMoney(v) {
+  if (!v) return '$0';
+  return '$' + Number(v).toLocaleString('es-MX');
+}
+function etapaBadge(etapa) {
+  const map = {
+    'Prospecto': 'etapa-prospecto',
+    'Calificado': 'etapa-calificado',
+    'Propuesta': 'etapa-propuesta',
+    'Negociación': 'etapa-negociacion',
+    'Cerrado': 'etapa-cerrado'
+  };
+  return `<span class="badge ${map[etapa] || ''}">${etapa}</span>`;
+}
+
+// Dashboard
+async function loadDashboard() {
+  const d = await fetch(API + '/api/dashboard').then(r => r.json());
+  document.getElementById('d-total').textContent = d.total_oportunidades;
+  document.getElementById('d-valor').textContent = formatMoney(d.valor_total);
+  const cerradas = d.por_etapa.find(e => e.etapa === 'Cerrado');
+  document.getElementById('d-cerradas').textContent = cerradas ? cerradas.n : 0;
+  document.getElementById('d-proceso').textContent = d.total_oportunidades - (cerradas ? cerradas.n : 0);
+  
+  const rec = document.getElementById('dashboard-recientes');
+  if (d.recientes.length === 0) {
+    rec.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Aún no hay oportunidades. ¡Crea la primera!</div></div>';
+    return;
+  }
+  rec.innerHTML = `<table style="width:100%;border-collapse:collapse;">
+    <thead><tr>
+      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Título</th>
+      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Cliente</th>
+      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Etapa</th>
+      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Valor</th>
+    </tr></thead>
+    <tbody>${d.recientes.map(op => `
+      <tr onclick="verOp(${op.id})" style="cursor:pointer;">
+        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;">${op.titulo}</td>
+        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;color:var(--text2);">${op.cliente_nombre||'—'}</td>
+        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;">${etapaBadge(op.etapa)}</td>
+        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;color:var(--accent);font-weight:600;">${formatMoney(op.valor)}</td>
+      </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// Pipeline
+async function loadPipeline() {
+  const ops = await fetch(API + '/api/oportunidades').then(r => r.json());
+  const etapas = ['Prospecto','Calificado','Propuesta','Negociación','Cerrado'];
+  etapas.forEach(etapa => {
+    const col = document.getElementById('col-' + etapa.toLowerCase().replace('ó','o').replace('ó','o'));
+    if (!col) return;
+    const filtered = ops.filter(o => o.etapa === etapa);
+    col.innerHTML = filtered.length === 0 ? '<div style="color:var(--text2);font-size:12px;text-align:center;padding:20px 0;">Sin oportunidades</div>' :
+      filtered.map(op => `
+        <div class="op-card" onclick="verOp(${op.id})">
+          <div class="op-card-title">${op.titulo}</div>
+          <div class="op-card-client">${op.cliente_nombre||''} ${op.empresa ? '· '+op.empresa : ''}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="op-card-value">${formatMoney(op.valor)}</div>
+            <div class="op-card-prob">${op.probabilidad||0}%</div>
+          </div>
+          <div class="prob-bar"><div class="prob-fill" style="width:${op.probabilidad||0}%"></div></div>
+        </div>`).join('');
+  });
+}
+
+// Oportunidades
+async function loadOps() {
+  allOps = await fetch(API + '/api/oportunidades').then(r => r.json());
+  renderOpsTable(allOps);
+}
+function renderOpsTable(ops) {
+  const tbody = document.getElementById('ops-table-body');
+  if (ops.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text2);">No hay oportunidades aún</td></tr>';
+    return;
+  }
+  tbody.innerHTML = ops.map(op => `
+    <tr onclick="verOp(${op.id})" style="cursor:pointer;">
+      <td style="font-weight:500;">${op.titulo}</td>
+      <td style="color:var(--text2);">${op.cliente_nombre||'—'}<br><span style="font-size:11px;">${op.empresa||''}</span></td>
+      <td>${etapaBadge(op.etapa)}</td>
+      <td style="color:var(--accent);font-weight:600;">${formatMoney(op.valor)}</td>
+      <td>${op.probabilidad||0}%</td>
+      <td style="color:var(--text2);">${op.fecha_cierre||'—'}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();verOp(${op.id})">Ver</button></td>
+    </tr>`).join('');
+}
+function filtrarOps(q) {
+  if (!q) return renderOpsTable(allOps);
+  const f = allOps.filter(op => 
+    (op.titulo||'').toLowerCase().includes(q.toLowerCase()) ||
+    (op.cliente_nombre||'').toLowerCase().includes(q.toLowerCase()) ||
+    (op.empresa||'').toLowerCase().includes(q.toLowerCase())
+  );
+  renderOpsTable(f);
+}
+
+// Ver detalle
+async function verOp(id) {
+  currentOpId = id;
+  const op = await fetch(API + '/api/oportunidades/' + id).then(r => r.json());
+  showPage('detalle');
+  document.getElementById('detalle-content').innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">${op.titulo}</div>
+          <div class="detail-meta">${op.cliente_nombre||''} ${op.empresa ? '· '+op.empresa : ''}</div>
+        </div>
+        <div>${etapaBadge(op.etapa)}</div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-field"><label>Valor</label><div class="value" style="color:var(--accent);font-size:20px;font-weight:600;">${formatMoney(op.valor)}</div></div>
+        <div class="detail-field"><label>Probabilidad</label><div class="value">${op.probabilidad||0}%</div></div>
+        <div class="detail-field"><label>Fecha de Cierre</label><div class="value">${op.fecha_cierre||'—'}</div></div>
+        <div class="detail-field"><label>Email</label><div class="value">${op.email||'—'}</div></div>
+        <div class="detail-field"><label>Teléfono</label><div class="value">${op.telefono||'—'}</div></div>
+        <div class="detail-field"><label>Creado</label><div class="value">${op.creado||'—'}</div></div>
+      </div>
+      ${op.notas ? `<div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:24px;font-size:13px;color:var(--text2);">${op.notas}</div>` : ''}
+      <div class="activity-list">
+        <div class="activity-title">Actividad</div>
+        <div id="actividades-list">
+          ${op.actividades.length === 0 ? '<div style="color:var(--text2);font-size:13px;margin-bottom:16px;">Sin actividad registrada</div>' :
+            op.actividades.map(a => `
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div class="activity-content">
+                  <div class="activity-desc">${a.descripcion}</div>
+                  <div class="activity-date">${a.tipo} · ${a.fecha}</div>
+                </div>
+              </div>`).join('')}
+        </div>
+        <div class="add-activity">
+          <select id="act-tipo" style="width:130px;flex-shrink:0;">
+            <option>Nota</option><option>Llamada</option><option>Email</option><option>Reunión</option><option>Seguimiento</option>
+          </select>
+          <input type="text" id="act-desc" placeholder="Agregar actividad o nota...">
+          <button class="btn btn-primary btn-sm" onclick="agregarActividad(${id})">Agregar</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function agregarActividad(opId) {
+  const desc = document.getElementById('act-desc').value.trim();
+  if (!desc) return;
+  const tipo = document.getElementById('act-tipo').value;
+  await fetch(API + '/api/actividades', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ oportunidad_id: opId, tipo, descripcion: desc })
+  });
+  document.getElementById('act-desc').value = '';
+  verOp(opId);
+  notify('Actividad registrada');
+}
+
+// Guardar oportunidad
+async function guardarOp() {
+  const titulo = document.getElementById('op-titulo').value.trim();
+  if (!titulo) { alert('El título es requerido'); return; }
+  const editId = document.getElementById('op-edit-id').value;
+  const data = {
+    titulo,
+    cliente_nombre: document.getElementById('op-cliente').value.trim(),
+    empresa: document.getElementById('op-empresa').value.trim(),
+    valor: parseFloat(document.getElementById('op-valor').value) || 0,
+    etapa: document.getElementById('op-etapa').value,
+    probabilidad: parseInt(document.getElementById('op-prob').value) || 0,
+    fecha_cierre: document.getElementById('op-cierre').value,
+    notas: document.getElementById('op-notas').value.trim()
+  };
+  if (editId) {
+    await fetch(API + '/api/oportunidades/' + editId, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    notify('Oportunidad actualizada ✓');
+    closeModal('nueva-op');
+    verOp(editId);
+  } else {
+    await fetch(API + '/api/oportunidades', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    notify('Oportunidad creada ✓');
+    closeModal('nueva-op');
+    loadDashboard();
+  }
+}
+
+function editarOp() {
+  if (!currentOpId) return;
+  fetch(API + '/api/oportunidades/' + currentOpId).then(r => r.json()).then(op => {
+    document.getElementById('modal-op-title').textContent = 'Editar Oportunidad';
+    document.getElementById('op-edit-id').value = op.id;
+    document.getElementById('op-titulo').value = op.titulo;
+    document.getElementById('op-cliente').value = op.cliente_nombre || '';
+    document.getElementById('op-empresa').value = op.empresa || '';
+    document.getElementById('op-valor').value = op.valor || '';
+    document.getElementById('op-etapa').value = op.etapa;
+    document.getElementById('op-prob').value = op.probabilidad || '';
+    document.getElementById('op-cierre').value = op.fecha_cierre || '';
+    document.getElementById('op-notas').value = op.notas || '';
+    openModal('nueva-op');
+  });
+}
+
+async function eliminarOp() {
+  if (!currentOpId) return;
+  if (!confirm('¿Eliminar esta oportunidad?')) return;
+  await fetch(API + '/api/oportunidades/' + currentOpId, { method: 'DELETE' });
+  notify('Oportunidad eliminada');
+  showPage('oportunidades');
+}
+
+// Clientes
+async function loadClientes() {
+  const clientes = await fetch(API + '/api/clientes').then(r => r.json());
+  const tbody = document.getElementById('clientes-table-body');
+  if (clientes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text2);">No hay clientes aún</td></tr>';
+    return;
+  }
+  tbody.innerHTML = clientes.map(c => `
+    <tr>
+      <td style="font-weight:500;">${c.nombre}</td>
+      <td style="color:var(--text2);">${c.empresa||'—'}</td>
+      <td style="color:var(--text2);">${c.email||'—'}</td>
+      <td style="color:var(--text2);">${c.telefono||'—'}</td>
+    </tr>`).join('');
+}
+
+async function guardarCliente() {
+  const nombre = document.getElementById('c-nombre').value.trim();
+  if (!nombre) { alert('El nombre es requerido'); return; }
+  await fetch(API + '/api/clientes', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      nombre,
+      empresa: document.getElementById('c-empresa').value.trim(),
+      email: document.getElementById('c-email').value.trim(),
+      telefono: document.getElementById('c-telefono').value.trim()
+    })
+  });
+  notify('Cliente guardado ✓');
+  closeModal('nuevo-cliente');
+  loadClientes();
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.add('hidden'); });
+});
+
+// Init
+loadDashboard();
+</script>
+</body>
+</html>
