@@ -3,697 +3,1154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM — Ventas</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>FillGap CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0f13;
-    --surface: #16161d;
-    --surface2: #1e1e28;
-    --border: #2a2a38;
-    --accent: #c8a96e;
-    --accent2: #e8c98e;
-    --text: #e8e8f0;
-    --text2: #9090a8;
-    --green: #4caf82;
-    --blue: #5b9bd5;
-    --orange: #e07b39;
-    --red: #e05555;
-    --purple: #8b6fd4;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+:root {
+  --green: #1a3a2a;
+  --green2: #2d5a3d;
+  --green3: #3d7a52;
+  --gold: #c8a84b;
+  --gold2: #e8c86a;
+  --white: #ffffff;
+  --bg: #f5f5f0;
+  --bg2: #eeede8;
+  --border: #d8d5cc;
+  --text: #1a1a1a;
+  --text2: #5a5a5a;
+  --text3: #8a8a8a;
+  --red: #c0392b;
+  --blue: #2471a3;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow2: 0 4px 24px rgba(0,0,0,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* Layout */
-  .app { display: flex; height: 100vh; overflow: hidden; }
-  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-  .main { flex: 1; overflow-y: auto; }
+/* LOGIN */
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--green); }
+.login-box { background: var(--white); border-radius: 16px; padding: 48px 40px; width: 400px; box-shadow: var(--shadow2); }
+.login-logo { text-align: center; margin-bottom: 32px; }
+.login-logo h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--green); letter-spacing: 2px; }
+.login-logo p { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 3px; margin-top: 4px; }
+.login-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 24px; color: var(--green); }
+.login-error { background: #fdf0ee; border: 1px solid #e8c0bb; color: var(--red); padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
 
-  /* Sidebar */
-  .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); }
-  .sidebar-logo h1 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); letter-spacing: -0.5px; }
-  .sidebar-logo span { font-size: 11px; color: var(--text2); font-weight: 300; letter-spacing: 2px; text-transform: uppercase; }
-  .nav { padding: 12px 0; flex: 1; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; color: var(--text2); font-size: 14px; font-weight: 400; transition: all 0.15s; border-left: 3px solid transparent; }
-  .nav-item:hover { color: var(--text); background: var(--surface2); }
-  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(200,169,110,0.06); }
-  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+/* APP */
+.app { display: flex; height: 100vh; overflow: hidden; }
+.hidden { display: none !important; }
 
-  /* Header */
-  .page-header { padding: 28px 32px 0; display: flex; align-items: flex-start; justify-content: space-between; }
-  .page-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); }
-  .page-sub { font-size: 13px; color: var(--text2); margin-top: 3px; }
+/* SIDEBAR */
+.sidebar { width: 240px; background: var(--green); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-logo { padding: 28px 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar-logo h1 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--white); letter-spacing: 2px; }
+.sidebar-logo p { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 3px; margin-top: 3px; }
+.nav { padding: 16px 0; flex: 1; overflow-y: auto; }
+.nav-section { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 2px; padding: 16px 24px 6px; font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 24px; cursor: pointer; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 400; transition: all 0.15s; border-left: 3px solid transparent; }
+.nav-item:hover { color: var(--white); background: rgba(255,255,255,0.07); }
+.nav-item.active { color: var(--gold2); border-left-color: var(--gold); background: rgba(255,255,255,0.08); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+.sidebar-user { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.1); }
+.sidebar-user-name { font-size: 13px; color: var(--white); font-weight: 500; }
+.sidebar-user-role { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.sidebar-user-logout { font-size: 11px; color: var(--gold); cursor: pointer; margin-top: 6px; }
+.sidebar-user-logout:hover { color: var(--gold2); }
 
-  /* Buttons */
-  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; font-family: inherit; }
-  .btn-primary { background: var(--accent); color: #0f0f13; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
-  .btn-ghost:hover { color: var(--text); border-color: var(--text2); }
-  .btn-danger { background: rgba(224,85,85,0.15); color: var(--red); border: 1px solid rgba(224,85,85,0.3); }
-  .btn-danger:hover { background: rgba(224,85,85,0.25); }
-  .btn-sm { padding: 6px 12px; font-size: 12px; }
+/* MAIN */
+.main { flex: 1; overflow-y: auto; background: var(--bg); }
+.page { display: none; }
+.page.active { display: block; }
 
-  /* Cards & Grid */
-  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px 32px; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-  .card-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; }
-  .card-value { font-size: 28px; font-family: 'DM Serif Display', serif; color: var(--text); margin-top: 6px; }
-  .card-value.accent { color: var(--accent); }
+/* HEADER */
+.page-header { padding: 28px 32px 0; display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.page-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--green); }
+.page-sub { font-size: 13px; color: var(--text3); margin-top: 3px; }
 
-  /* Pipeline */
-  .pipeline { padding: 0 32px 32px; }
-  .pipeline-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
-  .pipeline-cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-  .pipeline-col { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-height: 200px; }
-  .pipeline-col-title { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
-  .etapa-prospecto { background: rgba(91,155,213,0.15); color: var(--blue); }
-  .etapa-calificado { background: rgba(139,111,212,0.15); color: var(--purple); }
-  .etapa-propuesta { background: rgba(224,123,57,0.15); color: var(--orange); }
-  .etapa-negociacion { background: rgba(200,169,110,0.15); color: var(--accent); }
-  .etapa-cerrado { background: rgba(76,175,130,0.15); color: var(--green); }
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; font-family: inherit; }
+.btn-primary { background: var(--green); color: var(--white); }
+.btn-primary:hover { background: var(--green2); }
+.btn-gold { background: var(--gold); color: var(--green); }
+.btn-gold:hover { background: var(--gold2); }
+.btn-ghost { background: var(--white); color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+.btn-danger { background: #fdf0ee; color: var(--red); border: 1px solid #e8c0bb; }
+.btn-danger:hover { background: #fae0dc; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-xs { padding: 4px 9px; font-size: 11px; border-radius: 6px; }
 
-  .op-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
-  .op-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .op-card-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-  .op-card-client { font-size: 11px; color: var(--text2); margin-bottom: 8px; }
-  .op-card-value { font-size: 13px; font-weight: 600; color: var(--accent); }
-  .op-card-prob { font-size: 11px; color: var(--text2); }
-  .prob-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; }
-  .prob-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.3s; }
+/* CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; padding: 0 32px 24px; }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
+.card-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; }
+.card-value { font-size: 26px; font-family: 'Playfair Display', serif; color: var(--green); margin-top: 6px; }
+.card-value.gold { color: var(--gold); }
+.card-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
 
-  /* Table */
-  .table-wrap { padding: 0 32px 32px; }
-  .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .table-search { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; color: var(--text); font-size: 13px; font-family: inherit; width: 240px; outline: none; }
-  .table-search:focus { border-color: var(--accent); }
-  table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  td { padding: 13px 14px; border-bottom: 1px solid rgba(42,42,56,0.5); font-size: 13px; vertical-align: middle; }
-  tr:hover td { background: var(--surface2); }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+/* TABLE */
+.table-wrap { padding: 0 32px 32px; }
+.table-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; }
+.search-input { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; color: var(--text); font-size: 13px; font-family: inherit; width: 260px; outline: none; transition: border 0.15s; }
+.search-input:focus { border-color: var(--green); }
+.table-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg); }
+td { padding: 13px 16px; border-bottom: 1px solid #f0efe9; font-size: 13px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #fafaf6; cursor: pointer; }
+.td-main { font-weight: 500; color: var(--text); }
+.td-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
 
-  /* Modal */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.5); }
-  .modal-header { padding: 24px 28px 0; display: flex; justify-content: space-between; align-items: flex-start; }
-  .modal-title { font-family: 'DM Serif Display', serif; font-size: 22px; }
-  .modal-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 20px; padding: 4px; line-height: 1; }
-  .modal-close:hover { color: var(--text); }
-  .modal-body { padding: 20px 28px 28px; }
-  .form-group { margin-bottom: 16px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  label { display: block; font-size: 12px; color: var(--text2); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; color: var(--text); font-size: 13px; font-family: inherit; outline: none; transition: border 0.15s; }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  textarea { resize: vertical; min-height: 80px; }
-  select option { background: var(--surface); }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+/* BADGES */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge-prospecto { background: #eaf0fb; color: #2471a3; }
+.badge-cita { background: #f0eafb; color: #7d3c98; }
+.badge-propuesta { background: #fef9e7; color: #b7950b; }
+.badge-si-verbal { background: #eafaf1; color: #1e8449; }
+.badge-ganado { background: #d5f5e3; color: #145a32; }
+.badge-perdido { background: #fdecea; color: #922b21; }
+.badge-admin { background: #fef3cd; color: #856404; }
+.badge-vendedor { background: #e8f4f8; color: #1a5276; }
 
-  /* Detail Panel */
-  .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 0 32px 32px; }
-  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-  .detail-title { font-family: 'DM Serif Display', serif; font-size: 24px; }
-  .detail-meta { font-size: 13px; color: var(--text2); margin-top: 4px; }
-  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-  .detail-field label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
-  .detail-field .value { font-size: 15px; color: var(--text); margin-top: 3px; }
-  .activity-list { border-top: 1px solid var(--border); padding-top: 20px; }
-  .activity-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-  .activity-item { display: flex; gap: 12px; margin-bottom: 14px; }
-  .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
-  .activity-content { flex: 1; }
-  .activity-desc { font-size: 13px; color: var(--text); }
-  .activity-date { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .add-activity { margin-top: 16px; display: flex; gap: 10px; }
-  .add-activity input { flex: 1; }
+/* PIPELINE */
+.pipeline-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; padding: 0 32px 32px; }
+.pipeline-col { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 12px; min-height: 180px; box-shadow: var(--shadow); }
+.pipeline-col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid; }
+.pc-prospecto { border-color: #2471a3; color: #2471a3; }
+.pc-cita { border-color: #7d3c98; color: #7d3c98; }
+.pc-propuesta { border-color: #b7950b; color: #b7950b; }
+.pc-si-verbal { border-color: #1e8449; color: #1e8449; }
+.pc-ganado { border-color: #145a32; color: #145a32; }
+.pc-perdido { border-color: #922b21; color: #922b21; }
+.op-mini { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px; margin-bottom: 7px; cursor: pointer; transition: all 0.15s; }
+.op-mini:hover { border-color: var(--green); box-shadow: var(--shadow); }
+.op-mini-title { font-size: 12px; font-weight: 500; color: var(--text); }
+.op-mini-client { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.op-mini-value { font-size: 12px; font-weight: 600; color: var(--green); margin-top: 6px; }
+.op-mini-vendedor { font-size: 10px; color: var(--text3); }
+.prob-bar { height: 3px; background: var(--bg2); border-radius: 2px; margin-top: 6px; }
+.prob-fill { height: 100%; border-radius: 2px; background: var(--green3); }
 
-  /* Empty state */
-  .empty { text-align: center; padding: 60px 20px; color: var(--text2); }
-  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
-  .empty-text { font-size: 15px; }
+/* MODAL */
+.overlay { position: fixed; inset: 0; background: rgba(26,58,42,0.4); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+.modal { background: var(--white); border-radius: 16px; width: 600px; max-width: 96vw; max-height: 92vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.2); }
+.modal-header { padding: 24px 28px 0; display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--green); }
+.modal-close { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 22px; line-height: 1; padding: 4px; }
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 20px 28px 28px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
 
-  /* Notification */
-  .notification { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
-  .notification.show { transform: translateY(0); opacity: 1; }
+/* FORMS */
+.form-group { margin-bottom: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+label { display: block; font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+input, select, textarea { width: 100%; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; color: var(--text); font-size: 13px; font-family: inherit; outline: none; transition: border 0.15s; }
+input:focus, select:focus, textarea:focus { border-color: var(--green); }
+textarea { resize: vertical; min-height: 80px; }
+select option { background: var(--white); }
 
-  .hidden { display: none !important; }
+/* DETAIL */
+.detail-wrap { padding: 0 32px 32px; }
+.detail-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 28px; box-shadow: var(--shadow); }
+.detail-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.detail-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--green); }
+.detail-meta { font-size: 13px; color: var(--text3); margin-top: 4px; }
+.detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+.detail-field label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.detail-field .val { font-size: 14px; color: var(--text); margin-top: 3px; font-weight: 500; }
+.detail-field .val.big { font-size: 22px; font-family: 'Playfair Display', serif; color: var(--green); }
+.section-title { font-size: 12px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
 
-  @media (max-width: 768px) {
-    .pipeline-cols { grid-template-columns: 1fr 1fr; }
-    .cards-grid { grid-template-columns: 1fr 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-  }
+/* TASKS */
+.task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0efe9; }
+.task-item:last-child { border-bottom: none; }
+.task-check { width: 16px; height: 16px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; cursor: pointer; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.task-check.done { background: var(--green); border-color: var(--green); }
+.task-check.done::after { content: '✓'; color: white; font-size: 10px; }
+.task-desc { flex: 1; font-size: 13px; color: var(--text); }
+.task-desc.done { text-decoration: line-through; color: var(--text3); }
+.task-date { font-size: 11px; color: var(--text3); }
+.task-date.overdue { color: var(--red); font-weight: 600; }
+
+/* ACTIVITY */
+.activity-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0efe9; }
+.activity-item:last-child { border-bottom: none; }
+.activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green3); flex-shrink: 0; margin-top: 5px; }
+.activity-dot.sistema { background: var(--border); }
+.activity-text { font-size: 13px; color: var(--text); flex: 1; }
+.activity-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* NOTIFICATION */
+.notif { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: white; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.3s; box-shadow: var(--shadow2); }
+.notif.show { transform: translateY(0); opacity: 1; }
+.notif.error { background: var(--red); }
+
+/* REPORTES */
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 32px 32px; }
+.report-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
+.report-card h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--green); margin-bottom: 16px; }
+.report-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0efe9; font-size: 13px; }
+.report-row:last-child { border-bottom: none; }
+.report-bar-wrap { margin-top: 6px; }
+.report-bar { height: 6px; background: var(--bg2); border-radius: 3px; }
+.report-bar-fill { height: 100%; background: var(--green3); border-radius: 3px; transition: width 0.5s; }
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text3); }
+.empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">
+        <h1>FILLGAP</h1>
+        <p>CRM · Ventas</p>
+      </div>
+      <div id="login-error" class="login-error hidden"></div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="correo@fillgap.com" value="admin@fillgap.com">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="login-password" placeholder="••••••••" value="fillgap2024">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-page" class="hidden">
 <div class="app">
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-logo">
-      <h1>CRM</h1>
-      <span>Ventas</span>
+      <h1>FILLGAP</h1>
+      <p>CRM · Ventas</p>
     </div>
     <nav class="nav">
-      <div class="nav-item active" onclick="showPage('dashboard')">
+      <div class="nav-section">Principal</div>
+      <div class="nav-item active" data-page="dashboard" onclick="goPage('dashboard')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
       </div>
-      <div class="nav-item" onclick="showPage('pipeline')">
+      <div class="nav-item" data-page="pipeline" onclick="goPage('pipeline')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         Pipeline
       </div>
-      <div class="nav-item" onclick="showPage('oportunidades')">
+      <div class="nav-section">Ventas</div>
+      <div class="nav-item" data-page="oportunidades" onclick="goPage('oportunidades')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         Oportunidades
       </div>
-      <div class="nav-item" onclick="showPage('clientes')">
+      <div class="nav-item" data-page="tareas" onclick="goPage('tareas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Tareas
+      </div>
+      <div class="nav-section">Directorio</div>
+      <div class="nav-item" data-page="empresas" onclick="goPage('empresas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Empresas
+      </div>
+      <div class="nav-item" data-page="personas" onclick="goPage('personas')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Clientes
+        Personas
+      </div>
+      <div class="nav-section">Análisis</div>
+      <div class="nav-item" data-page="reportes" onclick="goPage('reportes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Reportes
+      </div>
+      <div id="nav-admin" class="nav-item hidden" data-page="usuarios" onclick="goPage('usuarios')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        Usuarios
       </div>
     </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-user-name" id="sidebar-name">—</div>
+      <div class="sidebar-user-role" id="sidebar-role">—</div>
+      <div class="sidebar-user-logout" onclick="doLogout()">Cerrar sesión →</div>
+    </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="main" id="main-content">
-    <!-- Dashboard -->
-    <div id="page-dashboard">
+  <div class="main">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
       <div class="page-header">
-        <div>
-          <div class="page-title">Dashboard</div>
-          <div class="page-sub">Resumen de ventas y oportunidades</div>
-        </div>
-        <button class="btn btn-primary" onclick="openModal('nueva-op')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Nueva Oportunidad
-        </button>
+        <div><div class="page-title">Dashboard</div><div class="page-sub">Resumen general de ventas</div></div>
+        <button class="btn btn-primary" onclick="openOpModal()">+ Nueva Oportunidad</button>
       </div>
-      <div class="cards-grid" id="dashboard-cards">
+      <div class="cards-grid" id="dash-cards">
         <div class="card"><div class="card-label">Oportunidades</div><div class="card-value" id="d-total">—</div></div>
-        <div class="card"><div class="card-label">Valor Total</div><div class="card-value accent" id="d-valor">—</div></div>
-        <div class="card"><div class="card-label">Cerradas</div><div class="card-value" id="d-cerradas">—</div></div>
-        <div class="card"><div class="card-label">En Proceso</div><div class="card-value" id="d-proceso">—</div></div>
+        <div class="card"><div class="card-label">Pipeline Activo</div><div class="card-value gold" id="d-pipeline">—</div></div>
+        <div class="card"><div class="card-label">Ganado</div><div class="card-value" id="d-ganado">—</div></div>
+        <div class="card"><div class="card-label">Tareas Pendientes</div><div class="card-value" id="d-tareas">—</div></div>
       </div>
-      <div class="pipeline">
-        <div class="pipeline-title">Actividad Reciente</div>
-        <div id="dashboard-recientes"></div>
+      <div style="padding:0 32px 24px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Oportunidades Recientes</div>
+            <div class="table-card" id="dash-recientes"></div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Tareas Próximas</div>
+            <div class="table-card" id="dash-tareas"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Pipeline -->
-    <div id="page-pipeline" class="hidden">
+    <!-- PIPELINE -->
+    <div id="page-pipeline" class="page">
       <div class="page-header">
-        <div>
-          <div class="page-title">Pipeline</div>
-          <div class="page-sub">Oportunidades por etapa</div>
-        </div>
-        <button class="btn btn-primary" onclick="openModal('nueva-op')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Nueva Oportunidad
-        </button>
+        <div><div class="page-title">Pipeline</div><div class="page-sub">Oportunidades por etapa</div></div>
+        <button class="btn btn-primary" onclick="openOpModal()">+ Nueva Oportunidad</button>
       </div>
-      <div style="padding: 24px 32px 32px;">
-        <div class="pipeline-cols" id="pipeline-cols">
-          <div class="pipeline-col"><div class="pipeline-col-title etapa-prospecto">Prospecto</div><div id="col-prospecto"></div></div>
-          <div class="pipeline-col"><div class="pipeline-col-title etapa-calificado">Calificado</div><div id="col-calificado"></div></div>
-          <div class="pipeline-col"><div class="pipeline-col-title etapa-propuesta">Propuesta</div><div id="col-propuesta"></div></div>
-          <div class="pipeline-col"><div class="pipeline-col-title etapa-negociacion">Negociación</div><div id="col-negociacion"></div></div>
-          <div class="pipeline-col"><div class="pipeline-col-title etapa-cerrado">Cerrado</div><div id="col-cerrado"></div></div>
-        </div>
-      </div>
+      <div class="pipeline-grid" id="pipeline-cols"></div>
     </div>
 
-    <!-- Oportunidades -->
-    <div id="page-oportunidades" class="hidden">
+    <!-- OPORTUNIDADES -->
+    <div id="page-oportunidades" class="page">
       <div class="page-header">
-        <div>
-          <div class="page-title">Oportunidades</div>
-          <div class="page-sub">Lista completa de oportunidades de venta</div>
-        </div>
-        <button class="btn btn-primary" onclick="openModal('nueva-op')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Nueva Oportunidad
-        </button>
+        <div><div class="page-title">Oportunidades</div><div class="page-sub">Gestión de oportunidades de venta</div></div>
+        <button class="btn btn-primary" onclick="openOpModal()">+ Nueva Oportunidad</button>
       </div>
-      <div class="table-wrap" style="margin-top:24px;">
-        <div class="table-header">
-          <input type="text" class="table-search" placeholder="Buscar oportunidad..." oninput="filtrarOps(this.value)">
+      <div class="table-wrap">
+        <div class="table-top">
+          <input class="search-input" placeholder="Buscar..." oninput="filterOps(this.value)">
+          <select style="width:160px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-family:inherit;" onchange="filterOpsByEtapa(this.value)">
+            <option value="">Todas las etapas</option>
+            <option>Prospecto</option><option>Cita</option><option>Propuesta</option>
+            <option>Sí Verbal</option><option>Ganado</option><option>Perdido</option>
+          </select>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th>Cliente</th>
-              <th>Etapa</th>
-              <th>Valor</th>
-              <th>Prob.</th>
-              <th>Cierre</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="ops-table-body"></tbody>
-        </table>
+        <div class="table-card">
+          <table><thead><tr>
+            <th>Oportunidad</th><th>Empresa / Persona</th><th>Vendedor</th>
+            <th>Etapa</th><th>Valor</th><th>Prob.</th><th>Cierre</th><th></th>
+          </tr></thead>
+          <tbody id="ops-tbody"></tbody></table>
+        </div>
       </div>
     </div>
 
-    <!-- Clientes -->
-    <div id="page-clientes" class="hidden">
+    <!-- DETALLE OPORTUNIDAD -->
+    <div id="page-detalle" class="page">
       <div class="page-header">
-        <div>
-          <div class="page-title">Clientes</div>
-          <div class="page-sub">Directorio de clientes y prospectos</div>
-        </div>
-        <button class="btn btn-primary" onclick="openModal('nuevo-cliente')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Nuevo Cliente
-        </button>
+        <button class="btn btn-ghost btn-sm" onclick="goBack()">← Volver</button>
+        <div id="detalle-actions" style="display:flex;gap:8px;"></div>
       </div>
-      <div class="table-wrap" style="margin-top:24px;">
-        <table>
-          <thead>
-            <tr><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th></tr>
-          </thead>
-          <tbody id="clientes-table-body"></tbody>
-        </table>
+      <div class="detail-wrap" id="detalle-content"></div>
+    </div>
+
+    <!-- TAREAS -->
+    <div id="page-tareas" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Tareas</div><div class="page-sub">Pendientes y seguimientos</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-card" id="tareas-list" style="padding:8px 16px;"></div>
       </div>
     </div>
 
-    <!-- Detalle Oportunidad -->
-    <div id="page-detalle" class="hidden">
-      <div class="page-header" style="margin-bottom:24px;">
-        <button class="btn btn-ghost btn-sm" onclick="showPage('oportunidades')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Volver
-        </button>
-        <div style="display:flex;gap:10px;">
-          <button class="btn btn-ghost btn-sm" onclick="editarOp()">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="eliminarOp()">Eliminar</button>
+    <!-- EMPRESAS -->
+    <div id="page-empresas" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Empresas</div><div class="page-sub">Directorio de empresas</div></div>
+        <button class="btn btn-primary" onclick="openEmpresaModal()">+ Nueva Empresa</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-card">
+          <table><thead><tr><th>Empresa</th><th>Industria</th><th>Tamaño</th><th></th></tr></thead>
+          <tbody id="empresas-tbody"></tbody></table>
         </div>
       </div>
-      <div id="detalle-content"></div>
+    </div>
+
+    <!-- PERSONAS -->
+    <div id="page-personas" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Personas</div><div class="page-sub">Directorio de contactos</div></div>
+        <button class="btn btn-primary" onclick="openPersonaModal()">+ Nueva Persona</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-card">
+          <table><thead><tr><th>Nombre</th><th>Empresa</th><th>Cargo</th><th>Email</th><th>Teléfono</th><th></th></tr></thead>
+          <tbody id="personas-tbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTES -->
+    <div id="page-reportes" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Reportes</div><div class="page-sub">Análisis y totales por vendedor</div></div>
+      </div>
+      <div class="report-grid" id="reportes-content"></div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div id="page-usuarios" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Usuarios</div><div class="page-sub">Gestión del equipo</div></div>
+        <button class="btn btn-primary" onclick="openUserModal()">+ Nuevo Usuario</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-card">
+          <table><thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="usuarios-tbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MODALES -->
+<!-- Oportunidad -->
+<div class="overlay hidden" id="op-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="op-modal-title">Nueva Oportunidad</div>
+      <button class="modal-close" onclick="closeModal('op-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="op-id">
+      <div class="form-group"><label>Título *</label><input id="op-titulo" placeholder="Ej: Programa Esenciales - Empresa ABC"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Empresa</label>
+          <select id="op-empresa"><option value="">Sin empresa</option></select>
+        </div>
+        <div class="form-group"><label>Persona de Contacto</label>
+          <select id="op-persona"><option value="">Sin persona</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Etapa</label>
+          <select id="op-etapa" onchange="autoProb()">
+            <option>Prospecto</option><option>Cita</option><option>Propuesta</option>
+            <option>Sí Verbal</option><option>Ganado</option><option>Perdido</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Probabilidad (%)</label>
+          <input type="number" id="op-prob" min="0" max="100" placeholder="5">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Valor ($)</label><input type="number" id="op-valor" placeholder="0"></div>
+        <div class="form-group"><label>Fecha Probable de Cierre</label><input type="date" id="op-cierre"></div>
+      </div>
+      <div class="form-group"><label>Vendedor Asignado</label>
+        <select id="op-vendedor"></select>
+      </div>
+      <div class="form-group"><label>Notas</label><textarea id="op-notas" placeholder="Contexto, detalles relevantes..."></textarea></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('op-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveOp()">Guardar</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Modal Nueva Oportunidad -->
-<div class="modal-overlay hidden" id="modal-nueva-op">
-  <div class="modal">
+<!-- Empresa -->
+<div class="overlay hidden" id="empresa-modal">
+  <div class="modal" style="width:480px;">
     <div class="modal-header">
-      <div class="modal-title" id="modal-op-title">Nueva Oportunidad</div>
-      <button class="modal-close" onclick="closeModal('nueva-op')">×</button>
+      <div class="modal-title" id="empresa-modal-title">Nueva Empresa</div>
+      <button class="modal-close" onclick="closeModal('empresa-modal')">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="op-edit-id">
-      <div class="form-group">
-        <label>Título de la Oportunidad *</label>
-        <input type="text" id="op-titulo" placeholder="Ej: Implementación ERP - Empresa XYZ">
-      </div>
+      <input type="hidden" id="empresa-id">
+      <div class="form-group"><label>Nombre *</label><input id="empresa-nombre" placeholder="Nombre de la empresa"></div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Nombre del Cliente *</label>
-          <input type="text" id="op-cliente" placeholder="Nombre completo">
+        <div class="form-group"><label>Industria</label>
+          <select id="empresa-industria">
+            <option value="">Seleccionar...</option>
+            <option>Manufactura</option><option>Servicios</option><option>Retail</option>
+            <option>Tecnología</option><option>Salud</option><option>Educación</option>
+            <option>Construcción</option><option>Alimentos</option><option>Otro</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label>Empresa</label>
-          <input type="text" id="op-empresa" placeholder="Nombre de la empresa">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Valor ($)</label>
-          <input type="number" id="op-valor" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label>Etapa</label>
-          <select id="op-etapa">
-            <option>Prospecto</option>
-            <option>Calificado</option>
-            <option>Propuesta</option>
-            <option>Negociación</option>
-            <option>Cerrado</option>
+        <div class="form-group"><label>Tamaño</label>
+          <select id="empresa-tamano">
+            <option value="">Seleccionar...</option>
+            <option>1-10 empleados</option><option>11-50 empleados</option>
+            <option>51-200 empleados</option><option>201-500 empleados</option><option>500+ empleados</option>
           </select>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Probabilidad (%)</label>
-          <input type="number" id="op-prob" min="0" max="100" placeholder="50">
-        </div>
-        <div class="form-group">
-          <label>Fecha de Cierre</label>
-          <input type="date" id="op-cierre">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Notas</label>
-        <textarea id="op-notas" placeholder="Detalles adicionales..."></textarea>
-      </div>
       <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeModal('nueva-op')">Cancelar</button>
-        <button class="btn btn-primary" onclick="guardarOp()">Guardar</button>
+        <button class="btn btn-ghost" onclick="closeModal('empresa-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveEmpresa()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal Nuevo Cliente -->
-<div class="modal-overlay hidden" id="modal-nuevo-cliente">
-  <div class="modal">
+<!-- Persona -->
+<div class="overlay hidden" id="persona-modal">
+  <div class="modal" style="width:480px;">
     <div class="modal-header">
-      <div class="modal-title">Nuevo Cliente</div>
-      <button class="modal-close" onclick="closeModal('nuevo-cliente')">×</button>
+      <div class="modal-title" id="persona-modal-title">Nueva Persona</div>
+      <button class="modal-close" onclick="closeModal('persona-modal')">×</button>
     </div>
     <div class="modal-body">
+      <input type="hidden" id="persona-id">
       <div class="form-row">
-        <div class="form-group">
-          <label>Nombre *</label>
-          <input type="text" id="c-nombre" placeholder="Nombre completo">
-        </div>
-        <div class="form-group">
-          <label>Empresa</label>
-          <input type="text" id="c-empresa" placeholder="Nombre de empresa">
-        </div>
+        <div class="form-group"><label>Nombre *</label><input id="persona-nombre" placeholder="Nombre completo"></div>
+        <div class="form-group"><label>Cargo</label><input id="persona-cargo" placeholder="Director, Gerente..."></div>
+      </div>
+      <div class="form-group"><label>Empresa</label>
+        <select id="persona-empresa"><option value="">Sin empresa</option></select>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="c-email" placeholder="correo@ejemplo.com">
-        </div>
-        <div class="form-group">
-          <label>Teléfono</label>
-          <input type="tel" id="c-telefono" placeholder="+1 234 567 8900">
-        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="persona-email" placeholder="correo@empresa.com"></div>
+        <div class="form-group"><label>Teléfono</label><input type="tel" id="persona-tel" placeholder="+52 55 1234 5678"></div>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeModal('nuevo-cliente')">Cancelar</button>
-        <button class="btn btn-primary" onclick="guardarCliente()">Guardar</button>
+        <button class="btn btn-ghost" onclick="closeModal('persona-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="savePersona()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="notification" id="notification"></div>
+<!-- Tarea -->
+<div class="overlay hidden" id="tarea-modal">
+  <div class="modal" style="width:440px;">
+    <div class="modal-header">
+      <div class="modal-title">Nueva Tarea</div>
+      <button class="modal-close" onclick="closeModal('tarea-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="tarea-op-id">
+      <div class="form-group"><label>Descripción *</label><textarea id="tarea-desc" placeholder="Descripción de la tarea..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Fecha Límite</label><input type="date" id="tarea-fecha"></div>
+        <div class="form-group"><label>Asignado a</label><select id="tarea-usuario"></select></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('tarea-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveTarea()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Usuario -->
+<div class="overlay hidden" id="user-modal">
+  <div class="modal" style="width:440px;">
+    <div class="modal-header">
+      <div class="modal-title" id="user-modal-title">Nuevo Usuario</div>
+      <button class="modal-close" onclick="closeModal('user-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="user-id">
+      <div class="form-row">
+        <div class="form-group"><label>Nombre *</label><input id="user-nombre" placeholder="Nombre completo"></div>
+        <div class="form-group"><label>Rol</label>
+          <select id="user-rol"><option value="vendedor">Vendedor</option><option value="admin">Admin</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="user-email" placeholder="correo@fillgap.com"></div>
+      <div class="form-group"><label>Contraseña <span style="color:var(--text3);font-weight:400;">(dejar vacío para no cambiar)</span></label>
+        <input type="password" id="user-password" placeholder="••••••••">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('user-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveUser()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
 
 <script>
 const API = '';
-let allOps = [];
+let TOKEN = localStorage.getItem('crm_token') || '';
+let ME = null;
+let allOps = [], allEmpresas = [], allPersonas = [], allUsuarios = [];
+let etapasMap = { 'Prospecto':5,'Cita':10,'Propuesta':50,'Sí Verbal':80,'Ganado':100,'Perdido':0 };
+let lastPage = 'oportunidades';
 let currentOpId = null;
 
-// Navigation
-function showPage(page) {
-  document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
-  document.getElementById('page-' + page).classList.remove('hidden');
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  const navMap = { dashboard: 0, pipeline: 1, oportunidades: 2, clientes: 3 };
-  const items = document.querySelectorAll('.nav-item');
-  if (navMap[page] !== undefined) items[navMap[page]].classList.add('active');
+function headers() {
+  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN };
+}
+
+async function api(method, path, body) {
+  const opts = { method, headers: headers() };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API + path, opts);
+  return r.json();
+}
+
+// AUTH
+async function doLogin() {
+  const email = document.getElementById('login-email').value;
+  const pw = document.getElementById('login-password').value;
+  const res = await fetch(API + '/api/login', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email, password: pw})
+  }).then(r => r.json());
+  if (res.token) {
+    TOKEN = res.token;
+    localStorage.setItem('crm_token', TOKEN);
+    ME = res.user;
+    startApp();
+  } else {
+    document.getElementById('login-error').textContent = 'Email o contraseña incorrectos';
+    document.getElementById('login-error').classList.remove('hidden');
+  }
+}
+document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+async function doLogout() {
+  await api('POST', '/api/logout');
+  TOKEN = ''; localStorage.removeItem('crm_token'); ME = null;
+  document.getElementById('app-page').classList.add('hidden');
+  document.getElementById('login-page').classList.remove('hidden');
+}
+
+async function startApp() {
+  if (!TOKEN) return;
+  const me = await api('GET', '/api/me');
+  if (!me || me.error) { TOKEN = ''; localStorage.removeItem('crm_token'); return; }
+  ME = me;
+  document.getElementById('login-page').classList.add('hidden');
+  document.getElementById('app-page').classList.remove('hidden');
+  document.getElementById('sidebar-name').textContent = ME.nombre;
+  document.getElementById('sidebar-role').textContent = ME.rol === 'admin' ? 'Administrador' : 'Vendedor';
+  if (ME.rol === 'admin') document.getElementById('nav-admin').classList.remove('hidden');
+  const etapas = await api('GET', '/api/etapas');
+  if (etapas) etapasMap = etapas;
+  await loadAll();
+  goPage('dashboard');
+}
+
+async function loadAll() {
+  [allEmpresas, allPersonas, allUsuarios] = await Promise.all([
+    api('GET', '/api/empresas'),
+    api('GET', '/api/personas'),
+    api('GET', '/api/usuarios')
+  ]);
+}
+
+// NAVIGATION
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
+  if (page !== 'detalle') lastPage = page;
   if (page === 'dashboard') loadDashboard();
   if (page === 'pipeline') loadPipeline();
   if (page === 'oportunidades') loadOps();
-  if (page === 'clientes') loadClientes();
+  if (page === 'tareas') loadTareas();
+  if (page === 'empresas') renderEmpresas();
+  if (page === 'personas') renderPersonas();
+  if (page === 'reportes') loadReportes();
+  if (page === 'usuarios') loadUsuarios();
 }
 
-// Modal
-function openModal(name) {
-  if (name === 'nueva-op') {
-    document.getElementById('modal-op-title').textContent = 'Nueva Oportunidad';
-    document.getElementById('op-edit-id').value = '';
-    ['op-titulo','op-cliente','op-empresa','op-notas','op-cierre'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('op-valor').value = '';
-    document.getElementById('op-prob').value = '';
-    document.getElementById('op-etapa').value = 'Prospecto';
-  }
-  document.getElementById('modal-' + name).classList.remove('hidden');
-}
-function closeModal(name) {
-  document.getElementById('modal-' + name).classList.add('hidden');
-}
+function goBack() { goPage(lastPage); }
 
-// Notify
-function notify(msg) {
-  const n = document.getElementById('notification');
+// FORMAT
+function money(v) { return '$' + (Number(v)||0).toLocaleString('es-MX'); }
+function badgeEtapa(e) {
+  const cls = {'Prospecto':'prospecto','Cita':'cita','Propuesta':'propuesta','Sí Verbal':'si-verbal','Ganado':'ganado','Perdido':'perdido'};
+  return `<span class="badge badge-${cls[e]||'prospecto'}">${e}</span>`;
+}
+function isOverdue(d) { return d && new Date(d) < new Date() && new Date(d).toDateString() !== new Date().toDateString(); }
+
+// NOTIFY
+function notify(msg, err=false) {
+  const n = document.getElementById('notif');
   n.textContent = msg;
-  n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 2500);
+  n.className = 'notif show' + (err?' error':'');
+  setTimeout(() => n.className = 'notif', 2500);
 }
 
-// Format
-function formatMoney(v) {
-  if (!v) return '$0';
-  return '$' + Number(v).toLocaleString('es-MX');
-}
-function etapaBadge(etapa) {
-  const map = {
-    'Prospecto': 'etapa-prospecto',
-    'Calificado': 'etapa-calificado',
-    'Propuesta': 'etapa-propuesta',
-    'Negociación': 'etapa-negociacion',
-    'Cerrado': 'etapa-cerrado'
-  };
-  return `<span class="badge ${map[etapa] || ''}">${etapa}</span>`;
-}
-
-// Dashboard
+// DASHBOARD
 async function loadDashboard() {
-  const d = await fetch(API + '/api/dashboard').then(r => r.json());
-  document.getElementById('d-total').textContent = d.total_oportunidades;
-  document.getElementById('d-valor').textContent = formatMoney(d.valor_total);
-  const cerradas = d.por_etapa.find(e => e.etapa === 'Cerrado');
-  document.getElementById('d-cerradas').textContent = cerradas ? cerradas.n : 0;
-  document.getElementById('d-proceso').textContent = d.total_oportunidades - (cerradas ? cerradas.n : 0);
-  
-  const rec = document.getElementById('dashboard-recientes');
-  if (d.recientes.length === 0) {
-    rec.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Aún no hay oportunidades. ¡Crea la primera!</div></div>';
-    return;
-  }
-  rec.innerHTML = `<table style="width:100%;border-collapse:collapse;">
-    <thead><tr>
-      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Título</th>
-      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Cliente</th>
-      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Etapa</th>
-      <th style="text-align:left;font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);">Valor</th>
-    </tr></thead>
-    <tbody>${d.recientes.map(op => `
-      <tr onclick="verOp(${op.id})" style="cursor:pointer;">
-        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;">${op.titulo}</td>
-        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;color:var(--text2);">${op.cliente_nombre||'—'}</td>
-        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;">${etapaBadge(op.etapa)}</td>
-        <td style="padding:13px 14px;border-bottom:1px solid rgba(42,42,56,0.5);font-size:13px;color:var(--accent);font-weight:600;">${formatMoney(op.valor)}</td>
-      </tr>`).join('')}</tbody>
-  </table>`;
+  const d = await api('GET', '/api/dashboard');
+  document.getElementById('d-total').textContent = d.total;
+  document.getElementById('d-pipeline').textContent = money(d.valor_pipeline);
+  document.getElementById('d-ganado').textContent = money(d.valor_ganado);
+  document.getElementById('d-tareas').textContent = d.tareas_pendientes.length;
+
+  const rec = document.getElementById('dash-recientes');
+  rec.innerHTML = d.recientes.length === 0 ? '<div class="empty-state"><div class="empty-icon">📋</div><div>Sin oportunidades aún</div></div>' :
+    '<table><tbody>' + d.recientes.map(o => `
+      <tr onclick="verOp(${o.id})">
+        <td><div class="td-main">${o.titulo}</div><div class="td-sub">${o.empresa_nombre||o.persona_nombre||'—'}</div></td>
+        <td>${badgeEtapa(o.etapa)}</td>
+        <td style="color:var(--green);font-weight:600;">${money(o.valor)}</td>
+      </tr>`).join('') + '</tbody></table>';
+
+  const tar = document.getElementById('dash-tareas');
+  tar.innerHTML = d.tareas_pendientes.length === 0 ? '<div class="empty-state"><div class="empty-icon">✓</div><div>Sin tareas pendientes</div></div>' :
+    '<div style="padding:8px 16px;">' + d.tareas_pendientes.map(t => `
+      <div class="task-item">
+        <div class="task-check" onclick="toggleTarea(${t.id}, this)"></div>
+        <div style="flex:1;">
+          <div class="task-desc">${t.descripcion}</div>
+          <div class="task-date ${isOverdue(t.fecha_limite)?'overdue':''}">${t.op_titulo} ${t.fecha_limite?'· '+t.fecha_limite:''}</div>
+        </div>
+      </div>`).join('') + '</div>';
 }
 
-// Pipeline
+// PIPELINE
 async function loadPipeline() {
-  const ops = await fetch(API + '/api/oportunidades').then(r => r.json());
-  const etapas = ['Prospecto','Calificado','Propuesta','Negociación','Cerrado'];
-  etapas.forEach(etapa => {
-    const col = document.getElementById('col-' + etapa.toLowerCase().replace('ó','o').replace('ó','o'));
-    if (!col) return;
-    const filtered = ops.filter(o => o.etapa === etapa);
-    col.innerHTML = filtered.length === 0 ? '<div style="color:var(--text2);font-size:12px;text-align:center;padding:20px 0;">Sin oportunidades</div>' :
-      filtered.map(op => `
-        <div class="op-card" onclick="verOp(${op.id})">
-          <div class="op-card-title">${op.titulo}</div>
-          <div class="op-card-client">${op.cliente_nombre||''} ${op.empresa ? '· '+op.empresa : ''}</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="op-card-value">${formatMoney(op.valor)}</div>
-            <div class="op-card-prob">${op.probabilidad||0}%</div>
-          </div>
-          <div class="prob-bar"><div class="prob-fill" style="width:${op.probabilidad||0}%"></div></div>
-        </div>`).join('');
-  });
+  const ops = await api('GET', '/api/oportunidades');
+  allOps = ops;
+  const etapas = ['Prospecto','Cita','Propuesta','Sí Verbal','Ganado','Perdido'];
+  const cls = {'Prospecto':'prospecto','Cita':'cita','Propuesta':'propuesta','Sí Verbal':'si-verbal','Ganado':'ganado','Perdido':'perdido'};
+  document.getElementById('pipeline-cols').innerHTML = etapas.map(e => {
+    const filtered = ops.filter(o => o.etapa === e);
+    const total = filtered.reduce((s,o) => s + (Number(o.valor)||0), 0);
+    return `<div class="pipeline-col">
+      <div class="pipeline-col-title pc-${cls[e]}">${e} <span style="font-weight:400;opacity:0.7;">(${filtered.length})</span></div>
+      ${total > 0 ? `<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">${money(total)}</div>` : ''}
+      ${filtered.length === 0 ? '<div style="color:var(--text3);font-size:12px;text-align:center;padding:20px 0;">—</div>' :
+        filtered.map(o => `
+          <div class="op-mini" onclick="verOp(${o.id})">
+            <div class="op-mini-title">${o.titulo}</div>
+            <div class="op-mini-client">${o.empresa_nombre||o.persona_nombre||'—'}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+              <div class="op-mini-value">${money(o.valor)}</div>
+              <div class="op-mini-vendedor">${o.vendedor||''}</div>
+            </div>
+            <div class="prob-bar"><div class="prob-fill" style="width:${o.probabilidad||0}%"></div></div>
+          </div>`).join('')}
+    </div>`;
+  }).join('');
 }
 
-// Oportunidades
+// OPORTUNIDADES
 async function loadOps() {
-  allOps = await fetch(API + '/api/oportunidades').then(r => r.json());
+  allOps = await api('GET', '/api/oportunidades');
   renderOpsTable(allOps);
 }
 function renderOpsTable(ops) {
-  const tbody = document.getElementById('ops-table-body');
-  if (ops.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text2);">No hay oportunidades aún</td></tr>';
-    return;
-  }
-  tbody.innerHTML = ops.map(op => `
-    <tr onclick="verOp(${op.id})" style="cursor:pointer;">
-      <td style="font-weight:500;">${op.titulo}</td>
-      <td style="color:var(--text2);">${op.cliente_nombre||'—'}<br><span style="font-size:11px;">${op.empresa||''}</span></td>
-      <td>${etapaBadge(op.etapa)}</td>
-      <td style="color:var(--accent);font-weight:600;">${formatMoney(op.valor)}</td>
-      <td>${op.probabilidad||0}%</td>
-      <td style="color:var(--text2);">${op.fecha_cierre||'—'}</td>
-      <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();verOp(${op.id})">Ver</button></td>
+  const tb = document.getElementById('ops-tbody');
+  if (!ops.length) { tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text3);">Sin oportunidades</td></tr>'; return; }
+  tb.innerHTML = ops.map(o => `
+    <tr onclick="verOp(${o.id})">
+      <td><div class="td-main">${o.titulo}</div></td>
+      <td><div class="td-main">${o.empresa_nombre||'—'}</div><div class="td-sub">${o.persona_nombre||''}</div></td>
+      <td style="color:var(--text2);">${o.vendedor||'—'}</td>
+      <td>${badgeEtapa(o.etapa)}</td>
+      <td style="font-weight:600;color:var(--green);">${money(o.valor)}</td>
+      <td style="color:var(--text2);">${o.probabilidad||0}%</td>
+      <td style="color:var(--text3);">${o.fecha_cierre||'—'}</td>
+      <td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();verOp(${o.id})">Ver</button></td>
     </tr>`).join('');
 }
-function filtrarOps(q) {
-  if (!q) return renderOpsTable(allOps);
-  const f = allOps.filter(op => 
-    (op.titulo||'').toLowerCase().includes(q.toLowerCase()) ||
-    (op.cliente_nombre||'').toLowerCase().includes(q.toLowerCase()) ||
-    (op.empresa||'').toLowerCase().includes(q.toLowerCase())
-  );
+let filterText = '', filterEtapa = '';
+function filterOps(q) { filterText = q; applyFilter(); }
+function filterOpsByEtapa(e) { filterEtapa = e; applyFilter(); }
+function applyFilter() {
+  let f = allOps;
+  if (filterText) f = f.filter(o => (o.titulo+o.empresa_nombre+o.persona_nombre+o.vendedor).toLowerCase().includes(filterText.toLowerCase()));
+  if (filterEtapa) f = f.filter(o => o.etapa === filterEtapa);
   renderOpsTable(f);
 }
 
-// Ver detalle
+// VER DETALLE
 async function verOp(id) {
   currentOpId = id;
-  const op = await fetch(API + '/api/oportunidades/' + id).then(r => r.json());
-  showPage('detalle');
+  const op = await api('GET', '/api/oportunidades/' + id);
+  document.getElementById('detalle-actions').innerHTML = `
+    <button class="btn btn-ghost btn-sm" onclick="openOpModal(${id})">Editar</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteOp(${id})">Eliminar</button>`;
+
   document.getElementById('detalle-content').innerHTML = `
-    <div class="detail-panel">
-      <div class="detail-header">
+    <div class="detail-card">
+      <div class="detail-top">
         <div>
           <div class="detail-title">${op.titulo}</div>
-          <div class="detail-meta">${op.cliente_nombre||''} ${op.empresa ? '· '+op.empresa : ''}</div>
+          <div class="detail-meta">${op.empresa_nombre||''} ${op.persona_nombre?'· '+op.persona_nombre:''} ${op.vendedor?'· '+op.vendedor:''}</div>
         </div>
-        <div>${etapaBadge(op.etapa)}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          ${badgeEtapa(op.etapa)}
+          <div style="font-size:11px;color:var(--text3);">${op.probabilidad||0}% probabilidad</div>
+        </div>
       </div>
       <div class="detail-grid">
-        <div class="detail-field"><label>Valor</label><div class="value" style="color:var(--accent);font-size:20px;font-weight:600;">${formatMoney(op.valor)}</div></div>
-        <div class="detail-field"><label>Probabilidad</label><div class="value">${op.probabilidad||0}%</div></div>
-        <div class="detail-field"><label>Fecha de Cierre</label><div class="value">${op.fecha_cierre||'—'}</div></div>
-        <div class="detail-field"><label>Email</label><div class="value">${op.email||'—'}</div></div>
-        <div class="detail-field"><label>Teléfono</label><div class="value">${op.telefono||'—'}</div></div>
-        <div class="detail-field"><label>Creado</label><div class="value">${op.creado||'—'}</div></div>
+        <div class="detail-field"><label>Valor</label><div class="val big">${money(op.valor)}</div></div>
+        <div class="detail-field"><label>Fecha de Cierre</label><div class="val">${op.fecha_cierre||'—'}</div></div>
+        <div class="detail-field"><label>Vendedor</label><div class="val">${op.vendedor||'—'}</div></div>
+        <div class="detail-field"><label>Persona</label><div class="val">${op.persona_nombre||'—'} ${op.cargo?'('+op.cargo+')':''}</div></div>
+        <div class="detail-field"><label>Email</label><div class="val">${op.persona_email||'—'}</div></div>
+        <div class="detail-field"><label>Teléfono</label><div class="val">${op.persona_tel||'—'}</div></div>
       </div>
-      ${op.notas ? `<div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:24px;font-size:13px;color:var(--text2);">${op.notas}</div>` : ''}
-      <div class="activity-list">
-        <div class="activity-title">Actividad</div>
-        <div id="actividades-list">
-          ${op.actividades.length === 0 ? '<div style="color:var(--text2);font-size:13px;margin-bottom:16px;">Sin actividad registrada</div>' :
-            op.actividades.map(a => `
-              <div class="activity-item">
-                <div class="activity-dot"></div>
-                <div class="activity-content">
-                  <div class="activity-desc">${a.descripcion}</div>
-                  <div class="activity-date">${a.tipo} · ${a.fecha}</div>
-                </div>
-              </div>`).join('')}
-        </div>
-        <div class="add-activity">
-          <select id="act-tipo" style="width:130px;flex-shrink:0;">
-            <option>Nota</option><option>Llamada</option><option>Email</option><option>Reunión</option><option>Seguimiento</option>
+      ${op.notas ? `<div style="background:var(--bg);border-radius:8px;padding:14px;font-size:13px;color:var(--text2);margin-bottom:8px;">${op.notas}</div>` : ''}
+
+      <div class="section-title">Tareas Pendientes
+        <button class="btn btn-ghost btn-xs" style="margin-left:10px;" onclick="openTareaModal(${op.id})">+ Agregar</button>
+      </div>
+      <div id="det-tareas">
+        ${op.tareas.length === 0 ? '<div style="color:var(--text3);font-size:13px;padding:8px 0;">Sin tareas</div>' :
+          op.tareas.map(t => `
+            <div class="task-item">
+              <div class="task-check ${t.completada?'done':''}" onclick="toggleTarea(${t.id}, this)"></div>
+              <div style="flex:1;">
+                <div class="task-desc ${t.completada?'done':''}">${t.descripcion}</div>
+                <div class="task-date ${isOverdue(t.fecha_limite)&&!t.completada?'overdue':''}">${t.asignado||''} ${t.fecha_limite?'· '+t.fecha_limite:''}</div>
+              </div>
+              <button class="btn btn-danger btn-xs" onclick="deleteTarea(${t.id})">×</button>
+            </div>`).join('')}
+      </div>
+
+      <div class="section-title">Actividad</div>
+      <div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <select id="act-tipo" style="width:130px;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-family:inherit;">
+            <option>Nota</option><option>Llamada</option><option>Email</option><option>Reunión</option>
           </select>
-          <input type="text" id="act-desc" placeholder="Agregar actividad o nota...">
-          <button class="btn btn-primary btn-sm" onclick="agregarActividad(${id})">Agregar</button>
+          <input id="act-desc" placeholder="Registrar actividad..." style="flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-family:inherit;outline:none;">
+          <button class="btn btn-primary btn-sm" onclick="addActividad(${op.id})">Agregar</button>
         </div>
+        ${op.actividades.map(a => `
+          <div class="activity-item">
+            <div class="activity-dot ${a.tipo==='Sistema'?'sistema':''}"></div>
+            <div style="flex:1;">
+              <div class="activity-text">${a.descripcion}</div>
+              <div class="activity-meta">${a.tipo==='Sistema'?'':''+a.tipo+' · '}${a.usuario_nombre||''} · ${a.fecha}</div>
+            </div>
+          </div>`).join('')}
       </div>
     </div>`;
+  goPage('detalle');
 }
 
-async function agregarActividad(opId) {
+async function addActividad(opId) {
   const desc = document.getElementById('act-desc').value.trim();
   if (!desc) return;
   const tipo = document.getElementById('act-tipo').value;
-  await fetch(API + '/api/actividades', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ oportunidad_id: opId, tipo, descripcion: desc })
-  });
+  await api('POST', '/api/actividades', { oportunidad_id: opId, tipo, descripcion: desc });
   document.getElementById('act-desc').value = '';
   verOp(opId);
   notify('Actividad registrada');
 }
 
-// Guardar oportunidad
-async function guardarOp() {
+async function toggleTarea(id, el) {
+  const done = !el.classList.contains('done');
+  await api('PUT', '/api/tareas/' + id, { completada: done ? 1 : 0 });
+  el.classList.toggle('done');
+  const desc = el.nextElementSibling?.querySelector('.task-desc');
+  if (desc) desc.classList.toggle('done');
+  notify(done ? 'Tarea completada ✓' : 'Tarea reabierta');
+}
+
+async function deleteTarea(id) {
+  if (!confirm('¿Eliminar esta tarea?')) return;
+  await api('DELETE', '/api/tareas/' + id);
+  verOp(currentOpId);
+  notify('Tarea eliminada');
+}
+
+async function deleteOp(id) {
+  if (!confirm('¿Eliminar esta oportunidad? Esta acción no se puede deshacer.')) return;
+  await api('DELETE', '/api/oportunidades/' + id);
+  notify('Oportunidad eliminada');
+  goPage('oportunidades');
+}
+
+// MODAL OPORTUNIDAD
+async function openOpModal(id = null) {
+  await loadAll();
+  populateSelect('op-empresa', allEmpresas, 'id', 'nombre', 'Sin empresa');
+  populateSelect('op-persona', allPersonas, 'id', 'nombre', 'Sin persona');
+  populateSelect('op-vendedor', allUsuarios, 'id', 'nombre');
+
+  if (id) {
+    const op = await api('GET', '/api/oportunidades/' + id);
+    document.getElementById('op-modal-title').textContent = 'Editar Oportunidad';
+    document.getElementById('op-id').value = op.id;
+    document.getElementById('op-titulo').value = op.titulo;
+    document.getElementById('op-empresa').value = op.empresa_id || '';
+    document.getElementById('op-persona').value = op.persona_id || '';
+    document.getElementById('op-etapa').value = op.etapa;
+    document.getElementById('op-prob').value = op.probabilidad;
+    document.getElementById('op-valor').value = op.valor || '';
+    document.getElementById('op-cierre').value = op.fecha_cierre || '';
+    document.getElementById('op-vendedor').value = op.usuario_id || ME.id;
+    document.getElementById('op-notas').value = op.notas || '';
+  } else {
+    document.getElementById('op-modal-title').textContent = 'Nueva Oportunidad';
+    document.getElementById('op-id').value = '';
+    ['op-titulo','op-notas'].forEach(id => document.getElementById(id).value = '');
+    ['op-valor','op-cierre'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('op-etapa').value = 'Prospecto';
+    document.getElementById('op-prob').value = 5;
+    document.getElementById('op-vendedor').value = ME.id;
+    document.getElementById('op-empresa').value = '';
+    document.getElementById('op-persona').value = '';
+  }
+  openModal('op-modal');
+}
+
+function autoProb() {
+  const etapa = document.getElementById('op-etapa').value;
+  document.getElementById('op-prob').value = etapasMap[etapa] ?? 5;
+}
+
+async function saveOp() {
   const titulo = document.getElementById('op-titulo').value.trim();
-  if (!titulo) { alert('El título es requerido'); return; }
-  const editId = document.getElementById('op-edit-id').value;
+  if (!titulo) { notify('El título es requerido', true); return; }
+  const id = document.getElementById('op-id').value;
   const data = {
     titulo,
-    cliente_nombre: document.getElementById('op-cliente').value.trim(),
-    empresa: document.getElementById('op-empresa').value.trim(),
-    valor: parseFloat(document.getElementById('op-valor').value) || 0,
+    empresa_id: document.getElementById('op-empresa').value || null,
+    persona_id: document.getElementById('op-persona').value || null,
+    usuario_id: document.getElementById('op-vendedor').value || ME.id,
     etapa: document.getElementById('op-etapa').value,
     probabilidad: parseInt(document.getElementById('op-prob').value) || 0,
+    valor: parseFloat(document.getElementById('op-valor').value) || 0,
     fecha_cierre: document.getElementById('op-cierre').value,
-    notas: document.getElementById('op-notas').value.trim()
+    notas: document.getElementById('op-notas').value
   };
-  if (editId) {
-    await fetch(API + '/api/oportunidades/' + editId, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  if (id) {
+    await api('PUT', '/api/oportunidades/' + id, data);
     notify('Oportunidad actualizada ✓');
-    closeModal('nueva-op');
-    verOp(editId);
+    closeModal('op-modal');
+    verOp(id);
   } else {
-    await fetch(API + '/api/oportunidades', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const res = await api('POST', '/api/oportunidades', data);
     notify('Oportunidad creada ✓');
-    closeModal('nueva-op');
-    loadDashboard();
+    closeModal('op-modal');
+    verOp(res.id);
   }
 }
 
-function editarOp() {
-  if (!currentOpId) return;
-  fetch(API + '/api/oportunidades/' + currentOpId).then(r => r.json()).then(op => {
-    document.getElementById('modal-op-title').textContent = 'Editar Oportunidad';
-    document.getElementById('op-edit-id').value = op.id;
-    document.getElementById('op-titulo').value = op.titulo;
-    document.getElementById('op-cliente').value = op.cliente_nombre || '';
-    document.getElementById('op-empresa').value = op.empresa || '';
-    document.getElementById('op-valor').value = op.valor || '';
-    document.getElementById('op-etapa').value = op.etapa;
-    document.getElementById('op-prob').value = op.probabilidad || '';
-    document.getElementById('op-cierre').value = op.fecha_cierre || '';
-    document.getElementById('op-notas').value = op.notas || '';
-    openModal('nueva-op');
-  });
-}
-
-async function eliminarOp() {
-  if (!currentOpId) return;
-  if (!confirm('¿Eliminar esta oportunidad?')) return;
-  await fetch(API + '/api/oportunidades/' + currentOpId, { method: 'DELETE' });
-  notify('Oportunidad eliminada');
-  showPage('oportunidades');
-}
-
-// Clientes
-async function loadClientes() {
-  const clientes = await fetch(API + '/api/clientes').then(r => r.json());
-  const tbody = document.getElementById('clientes-table-body');
-  if (clientes.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text2);">No hay clientes aún</td></tr>';
-    return;
-  }
-  tbody.innerHTML = clientes.map(c => `
-    <tr>
-      <td style="font-weight:500;">${c.nombre}</td>
-      <td style="color:var(--text2);">${c.empresa||'—'}</td>
-      <td style="color:var(--text2);">${c.email||'—'}</td>
-      <td style="color:var(--text2);">${c.telefono||'—'}</td>
+// EMPRESAS
+function renderEmpresas() {
+  const tb = document.getElementById('empresas-tbody');
+  if (!allEmpresas.length) { tb.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text3);">Sin empresas</td></tr>'; return; }
+  tb.innerHTML = allEmpresas.map(e => `
+    <tr onclick="openEmpresaModal(${e.id})">
+      <td class="td-main">${e.nombre}</td>
+      <td style="color:var(--text2);">${e.industria||'—'}</td>
+      <td style="color:var(--text2);">${e.tamano||'—'}</td>
+      <td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openEmpresaModal(${e.id})">Editar</button></td>
     </tr>`).join('');
 }
 
-async function guardarCliente() {
-  const nombre = document.getElementById('c-nombre').value.trim();
-  if (!nombre) { alert('El nombre es requerido'); return; }
-  await fetch(API + '/api/clientes', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      nombre,
-      empresa: document.getElementById('c-empresa').value.trim(),
-      email: document.getElementById('c-email').value.trim(),
-      telefono: document.getElementById('c-telefono').value.trim()
-    })
-  });
-  notify('Cliente guardado ✓');
-  closeModal('nuevo-cliente');
-  loadClientes();
+async function openEmpresaModal(id = null) {
+  document.getElementById('empresa-id').value = '';
+  ['empresa-nombre'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('empresa-industria').value = '';
+  document.getElementById('empresa-tamano').value = '';
+  if (id) {
+    const e = allEmpresas.find(x => x.id == id);
+    if (e) {
+      document.getElementById('empresa-modal-title').textContent = 'Editar Empresa';
+      document.getElementById('empresa-id').value = e.id;
+      document.getElementById('empresa-nombre').value = e.nombre;
+      document.getElementById('empresa-industria').value = e.industria || '';
+      document.getElementById('empresa-tamano').value = e.tamano || '';
+    }
+  } else {
+    document.getElementById('empresa-modal-title').textContent = 'Nueva Empresa';
+  }
+  openModal('empresa-modal');
 }
 
-// Close modal on overlay click
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) el.classList.add('hidden'); });
-});
+async function saveEmpresa() {
+  const nombre = document.getElementById('empresa-nombre').value.trim();
+  if (!nombre) { notify('El nombre es requerido', true); return; }
+  const id = document.getElementById('empresa-id').value;
+  const data = { nombre, industria: document.getElementById('empresa-industria').value, tamano: document.getElementById('empresa-tamano').value };
+  if (id) { await api('PUT', '/api/empresas/' + id, data); notify('Empresa actualizada ✓'); }
+  else { await api('POST', '/api/empresas', data); notify('Empresa creada ✓'); }
+  closeModal('empresa-modal');
+  allEmpresas = await api('GET', '/api/empresas');
+  renderEmpresas();
+}
 
-// Init
-loadDashboard();
+// PERSONAS
+function renderPersonas() {
+  const tb = document.getElementById('personas-tbody');
+  if (!allPersonas.length) { tb.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text3);">Sin personas</td></tr>'; return; }
+  tb.innerHTML = allPersonas.map(p => `
+    <tr onclick="openPersonaModal(${p.id})">
+      <td class="td-main">${p.nombre}</td>
+      <td style="color:var(--text2);">${p.empresa_nombre||'—'}</td>
+      <td style="color:var(--text2);">${p.cargo||'—'}</td>
+      <td style="color:var(--text2);">${p.email||'—'}</td>
+      <td style="color:var(--text2);">${p.telefono||'—'}</td>
+      <td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openPersonaModal(${p.id})">Editar</button></td>
+    </tr>`).join('');
+}
+
+async function openPersonaModal(id = null) {
+  await loadAll();
+  populateSelect('persona-empresa', allEmpresas, 'id', 'nombre', 'Sin empresa');
+  document.getElementById('persona-id').value = '';
+  ['persona-nombre','persona-cargo','persona-email','persona-tel'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('persona-empresa').value = '';
+  if (id) {
+    const p = allPersonas.find(x => x.id == id);
+    if (p) {
+      document.getElementById('persona-modal-title').textContent = 'Editar Persona';
+      document.getElementById('persona-id').value = p.id;
+      document.getElementById('persona-nombre').value = p.nombre;
+      document.getElementById('persona-cargo').value = p.cargo || '';
+      document.getElementById('persona-email').value = p.email || '';
+      document.getElementById('persona-tel').value = p.telefono || '';
+      document.getElementById('persona-empresa').value = p.empresa_id || '';
+    }
+  } else {
+    document.getElementById('persona-modal-title').textContent = 'Nueva Persona';
+  }
+  openModal('persona-modal');
+}
+
+async function savePersona() {
+  const nombre = document.getElementById('persona-nombre').value.trim();
+  if (!nombre) { notify('El nombre es requerido', true); return; }
+  const id = document.getElementById('persona-id').value;
+  const data = { nombre, cargo: document.getElementById('persona-cargo').value, email: document.getElementById('persona-email').value, telefono: document.getElementById('persona-tel').value, empresa_id: document.getElementById('persona-empresa').value || null };
+  if (id) { await api('PUT', '/api/personas/' + id, data); notify('Persona actualizada ✓'); }
+  else { await api('POST', '/api/personas', data); notify('Persona creada ✓'); }
+  closeModal('persona-modal');
+  allPersonas = await api('GET', '/api/personas');
+  renderPersonas();
+}
+
+// TAREAS
+async function loadTareas() {
+  const tareas = await api('GET', '/api/tareas');
+  const wrap = document.getElementById('tareas-list');
+  if (!tareas.length) { wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">✓</div><div>Sin tareas pendientes</div></div>'; return; }
+  wrap.innerHTML = tareas.map(t => `
+    <div class="task-item">
+      <div class="task-check" onclick="toggleTarea(${t.id}, this)"></div>
+      <div style="flex:1;">
+        <div class="task-desc">${t.descripcion}</div>
+        <div class="task-date ${isOverdue(t.fecha_limite)?'overdue':''}">${t.op_titulo} · ${t.asignado||''} ${t.fecha_limite?'· '+t.fecha_limite:''}</div>
+      </div>
+    </div>`).join('');
+}
+
+function openTareaModal(opId) {
+  document.getElementById('tarea-op-id').value = opId;
+  document.getElementById('tarea-desc').value = '';
+  document.getElementById('tarea-fecha').value = '';
+  populateSelect('tarea-usuario', allUsuarios, 'id', 'nombre');
+  document.getElementById('tarea-usuario').value = ME.id;
+  openModal('tarea-modal');
+}
+
+async function saveTarea() {
+  const desc = document.getElementById('tarea-desc').value.trim();
+  if (!desc) { notify('La descripción es requerida', true); return; }
+  const opId = document.getElementById('tarea-op-id').value;
+  await api('POST', '/api/tareas', { oportunidad_id: opId, descripcion: desc, fecha_limite: document.getElementById('tarea-fecha').value, usuario_id: document.getElementById('tarea-usuario').value });
+  notify('Tarea agregada ✓');
+  closeModal('tarea-modal');
+  if (currentOpId) verOp(currentOpId);
+}
+
+// REPORTES
+async function loadReportes() {
+  const d = await api('GET', '/api/dashboard');
+  const etapas = ['Prospecto','Cita','Propuesta','Sí Verbal','Ganado','Perdido'];
+  const maxValor = Math.max(...(d.por_vendedor||[]).map(v => Number(v.valor)||0), 1);
+
+  document.getElementById('reportes-content').innerHTML = `
+    <div class="report-card">
+      <h3>Por Etapa</h3>
+      ${etapas.map(e => {
+        const row = (d.por_etapa||[]).find(r => r.etapa === e) || {n:0,v:0};
+        return `<div class="report-row"><div>${e}</div><div style="text-align:right;"><strong>${row.n}</strong> ops · <span style="color:var(--green);font-weight:600;">${money(row.v||0)}</span></div></div>`;
+      }).join('')}
+    </div>
+    <div class="report-card">
+      <h3>Por Vendedor</h3>
+      ${(d.por_vendedor||[]).map(v => `
+        <div style="margin-bottom:14px;">
+          <div class="report-row" style="padding-bottom:4px;">
+            <div style="font-weight:500;">${v.nombre}</div>
+            <div style="color:var(--green);font-weight:600;">${money(v.valor||0)}</div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">${v.ops} oportunidades</div>
+          <div class="report-bar"><div class="report-bar-fill" style="width:${Math.round(((Number(v.valor)||0)/maxValor)*100)}%"></div></div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// USUARIOS
+async function loadUsuarios() {
+  const users = await api('GET', '/api/usuarios');
+  const tb = document.getElementById('usuarios-tbody');
+  tb.innerHTML = users.map(u => `
+    <tr onclick="openUserModal(${u.id})">
+      <td class="td-main">${u.nombre}</td>
+      <td style="color:var(--text2);">${u.email}</td>
+      <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
+      <td><span class="badge" style="${u.activo?'background:#eafaf1;color:#1e8449':'background:#fdecea;color:#922b21'}">${u.activo?'Activo':'Inactivo'}</span></td>
+      <td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openUserModal(${u.id})">Editar</button></td>
+    </tr>`).join('');
+}
+
+async function openUserModal(id = null) {
+  await loadAll();
+  document.getElementById('user-id').value = '';
+  ['user-nombre','user-email','user-password'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('user-rol').value = 'vendedor';
+  if (id) {
+    const u = allUsuarios.find(x => x.id == id);
+    if (u) {
+      document.getElementById('user-modal-title').textContent = 'Editar Usuario';
+      document.getElementById('user-id').value = u.id;
+      document.getElementById('user-nombre').value = u.nombre;
+      document.getElementById('user-email').value = u.email;
+      document.getElementById('user-rol').value = u.rol;
+    }
+  } else {
+    document.getElementById('user-modal-title').textContent = 'Nuevo Usuario';
+  }
+  openModal('user-modal');
+}
+
+async function saveUser() {
+  const nombre = document.getElementById('user-nombre').value.trim();
+  const email = document.getElementById('user-email').value.trim();
+  if (!nombre || !email) { notify('Nombre y email son requeridos', true); return; }
+  const id = document.getElementById('user-id').value;
+  const data = { nombre, email, rol: document.getElementById('user-rol').value, activo: 1 };
+  const pw = document.getElementById('user-password').value;
+  if (pw) data.password = pw;
+  if (id) { await api('PUT', '/api/usuarios/' + id, data); notify('Usuario actualizado ✓'); }
+  else { if (!pw) { notify('La contraseña es requerida', true); return; } await api('POST', '/api/usuarios', data); notify('Usuario creado ✓'); }
+  closeModal('user-modal');
+  loadUsuarios();
+  allUsuarios = await api('GET', '/api/usuarios');
+}
+
+// HELPERS
+function populateSelect(selectId, items, valKey, labelKey, emptyLabel = null) {
+  const sel = document.getElementById(selectId);
+  sel.innerHTML = (emptyLabel ? `<option value="">${emptyLabel}</option>` : '') +
+    items.map(i => `<option value="${i[valKey]}">${i[labelKey]}</option>`).join('');
+}
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+document.querySelectorAll('.overlay').forEach(el => el.addEventListener('click', e => { if (e.target === el) el.classList.add('hidden'); }));
+
+// INIT
+(async () => {
+  if (TOKEN) { await startApp(); }
+})();
 </script>
 </body>
 </html>
